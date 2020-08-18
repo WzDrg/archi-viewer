@@ -16,6 +16,12 @@ export const softwareSystemId = (name: string) =>
 export const isSoftwareSystem = (node: Node) =>
     node.id.startsWith("SoftwareSystem: ");
 
+export const environmentId = (name: string) =>
+    "Environment: " + name;
+
+export const isEnvironment = (node: Node) =>
+    node.id.startsWith("Environment: ");
+
 export enum LinkType {
     CONTAINS,
     USES
