@@ -2,6 +2,7 @@ import ApolloClient, { gql } from "apollo-boost";
 
 import NetworkServices from "../core/NetworkServices";
 import { Node, Link, Network, containerId, softwareSystemId, LinkType } from "../core/Network";
+import { ReferenceLink, referenceLinkToLink } from "./Reference";
 
 export interface Reference {
     type: string;
@@ -18,12 +19,6 @@ export interface SoftwareSystem {
     uses?: Reference[];
 };
 
-export interface ReferenceLink {
-    color: string;
-    source: string;
-    target: string;
-    type: LinkType;
-}
 
 const GET_SOFTWARE_SYSTEMS = gql`
     { 
@@ -109,16 +104,6 @@ const softwareSystemToLinks = (softwareSystem: SoftwareSystem): ReferenceLink[] 
     ...(softwareSystem.containers ?? []).map(containerToLinks).flat(),
     ...(softwareSystem.uses ?? [])
         .map(referenceToLink(softwareSystemId(softwareSystem.name), LinkType.USES))];
-
-// Convert a link using a reference to a link between nodes
-const referenceLinkToLink = (nodes: Node[]) =>
-    (nameLink: ReferenceLink): Link =>
-        ({
-            color: nameLink.color,
-            source: nodes.find(node => node.id === nameLink.source),
-            target: nodes.find(node => node.id === nameLink.target),
-            type: nameLink.type
-        })
 
 export const softwareSystemsToNetwork = (softwareSystems: SoftwareSystem[]): Network => {
     const nodes = softwareSystems

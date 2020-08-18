@@ -22,6 +22,9 @@ export const environmentId = (name: string) =>
 export const isEnvironment = (node: Node) =>
     node.id.startsWith("Environment: ");
 
+export const serverId = (name: string) =>
+    "Server: " + name;
+
 export enum LinkType {
     CONTAINS,
     USES

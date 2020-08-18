@@ -6,5 +6,7 @@ export default interface NetworkServices {
 
     // Get a list containing all names of the software systems
     getSoftwareSystemNames: () => Promise<string[]>;
+
+    getEnvironments: () => Promise<Network>;
 }
 

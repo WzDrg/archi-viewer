@@ -1,5 +1,6 @@
-import ApolloClient, { gql, InMemoryCache } from "apollo-boost";
-import { Network, Node, environmentId } from "../core/Network";
+import ApolloClient, { gql } from "apollo-boost";
+import { Network, Node, environmentId, serverId, Link, LinkType } from "../core/Network";
+import { ReferenceLink, referenceLinkToLink } from "./Reference";
 
 export interface Server {
     name: string
@@ -21,21 +22,44 @@ const GET_ENVIRONMENTS = gql`
     }
 `;
 
+const serverToNodes = (server: Server): Node[] =>
+    [{
+        color: "black",
+        id: serverId(server.name),
+        name: server.name
+    }];
+
+const serverToLinks = (environment: string) =>
+    (server: Server): ReferenceLink[] =>
+        [{
+            color: "black",
+            source: environmentId(environment),
+            target: serverId(server.name),
+            type: LinkType.CONTAINS
+        }];
+
+// Convert the environments to a nodes
 const environmentToNodes = (environment: Environment): Node[] =>
     [
         {
-            color: "green",
+            color: "orange",
             id: environmentId(environment.name),
             name: environment.name
-        }];
+        },
+        ...environment.servers.map(serverToNodes).flat()];
+
+const environmentToLinks = (nodes: Node[]) =>
+    (environment: Environment): Link[] =>
+        [...environment
+            .servers
+            .map(serverToLinks(environment.name))
+            .flat().map(referenceLinkToLink(nodes))];
 
 export const environmentsToNetwork = (environments: Environment[]): Network => {
-    const nodes = environments
-        .map(environmentToNodes)
-        .flat();
+    const nodes = environments.map(environmentToNodes).flat();
     return {
         nodes: nodes,
-        links: []
+        links: environments.map(environmentToLinks(nodes)).flat()
     }
 };
 

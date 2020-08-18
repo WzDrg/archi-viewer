@@ -2,6 +2,7 @@ import ApolloClient, { InMemoryCache } from "apollo-boost";
 
 import NetworkServices from "../core/NetworkServices";
 import { getSoftwareSystemsGraphql, getSoftwareSystemNamesGraphql } from "./SoftwareSystem";
+import { getEnvironments } from "./Environment";
 
 // Network services implementation using the GraphQL API
 export const graphqlNetworkServices = (uri: string): NetworkServices => {
@@ -11,6 +12,7 @@ export const graphqlNetworkServices = (uri: string): NetworkServices => {
     });
     return {
         getSoftwareSystems: getSoftwareSystemsGraphql(client),
-        getSoftwareSystemNames: getSoftwareSystemNamesGraphql(client)
+        getSoftwareSystemNames: getSoftwareSystemNamesGraphql(client),
+        getEnvironments: getEnvironments(client)
     };
 }
