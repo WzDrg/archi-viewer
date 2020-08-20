@@ -25,6 +25,9 @@ export const isEnvironment = (node: Node) =>
 export const serverId = (name: string) =>
     "Server: " + name;
 
+export const containerInstanceId = (name: string) =>
+    "ContainerInstance: " + name;
+
 export enum LinkType {
     CONTAINS,
     USES
