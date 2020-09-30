@@ -54,6 +54,7 @@ export default function NetworkPage() {
     const [softwareSystemNames, setSoftwareSystemNames] = useState([""]);
     async function getSoftwareSystemNames() {
         try {
+	    console.log("Get software system names");
             setLoadingSoftwareSystemNames(true);
             const names = await coreServices.getSoftwareSystemNames();
             setSoftwareSystemNames(["", ...names]);
@@ -68,7 +69,7 @@ export default function NetworkPage() {
     const [network, setNetwork] = useState({ nodes: [], links: [] });
     async function getNetwork() {
         try {
-            //            console.log(`level: ${options.level}`);
+            console.log(`level: ${options.level}`);
             setLoadingNetwork(true);
             const network = await coreServices.getNetwork(options);
             setNetwork(network);
@@ -138,7 +139,7 @@ export default function NetworkPage() {
             </Paper>
             <Paper elevation={3}>
                 <NetworkDiagram network={network} />
-            </Paper>
+	</Paper>
         </div>
     );
 }

@@ -67,7 +67,7 @@ const App = () => {
           </Tabs>
         </AppBar>
         <TabPanel value={value} index={0}>
-          <NetworkPage />
+	<NetworkPage />
         </TabPanel>
         <TabPanel value={value} index={1}>
           Item Two
