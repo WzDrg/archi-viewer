@@ -2,11 +2,11 @@ import { Network } from "./Network";
 
 export default interface NetworkServices {
     // Get the network configuration of all software systems
-    getSoftwareSystems: () => Promise<Network>;
+    getSoftwareSystems: (until:Date) => Promise<Network>;
 
     // Get a list containing all names of the software systems
-    getSoftwareSystemNames: () => Promise<string[]>;
+    getSoftwareSystemNames: (until:Date) => Promise<string[]>;
 
-    getEnvironments: () => Promise<Network>;
+    getEnvironments: (until:Date) => Promise<Network>;
 }
 

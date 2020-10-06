@@ -1,6 +1,6 @@
-import { filterShowSoftwareSystem, NetworkDisplayOptions, coreServices, isNodeVisible } from "./CoreServices";
-import NetworkServices from "./NetworkServices";
-import { LinkType } from "./Network";
+import { filterShowSoftwareSystem, NetworkDisplayOptions, coreServices, isNodeVisible } from "../CoreServices";
+import NetworkServices from "../NetworkServices";
+import { LinkType } from "../Network";
 
 describe("isNodeVisible", () => {
     it("should show or hide a container", () => {

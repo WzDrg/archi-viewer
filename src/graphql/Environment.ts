@@ -20,7 +20,9 @@ export interface Environment {
 
 const GET_ENVIRONMENTS = gql`
     { 
-        environments {
+        scalar Date
+
+        environments(until:Date) {
             name
             servers {
                 name
@@ -103,7 +105,7 @@ export const environmentsToNetwork = (environments: Environment[]): Network => {
 };
 
 export const getEnvironments = (client: ApolloClient<any>) =>
-    async (): Promise<Network> => {
-        const result = await client.query({ query: GET_ENVIRONMENTS });
+    async (until:Date): Promise<Network> => {
+        const result = await client.query({ query: GET_ENVIRONMENTS, variables: {until:until} });
         return environmentsToNetwork(result.data.environments);
     }

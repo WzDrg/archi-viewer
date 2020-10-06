@@ -1,4 +1,4 @@
-import { Network, Node, ofSoftwareSystem, softwareSystemId, containerId, Link, LinkType } from "./Network";
+import { Network, Node, ofSoftwareSystem, softwareSystemId, containerId, Link, LinkType } from "../Network";
 
 describe("ofSoftwareSystem", () => {
     it("should match the software system", () => {

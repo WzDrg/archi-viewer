@@ -22,7 +22,9 @@ export interface SoftwareSystem {
 
 const GET_SOFTWARE_SYSTEMS = gql`
     { 
-        softwareSystems {
+        scalar Date
+
+        softwareSystems(until:Date) {
             name
             containers {
                 name
@@ -40,8 +42,10 @@ const GET_SOFTWARE_SYSTEMS = gql`
 `;
 
 const GET_SOFTWARE_SYSTEM_NAMES = gql`
-    { 
-        softwareSystems {
+    {
+        scalar Date
+
+        softwareSystems(until:Date) {
             name
         }
     }
@@ -119,13 +123,13 @@ export const softwareSystemsToNetwork = (softwareSystems: SoftwareSystem[]): Net
 };
 
 export const getSoftwareSystemsGraphql = (client: ApolloClient<any>) =>
-    async (): Promise<Network> => {
-        const result = await client.query({ query: GET_SOFTWARE_SYSTEMS });
+    async (until:Date): Promise<Network> => {
+        const result = await client.query({ query: GET_SOFTWARE_SYSTEMS, variables:{until:until} });
         return softwareSystemsToNetwork(result.data.softwareSystems);
     }
 
 export const getSoftwareSystemNamesGraphql = (client: ApolloClient<any>) =>
-    async (): Promise<string[]> => {
-        const result = await client.query({ query: GET_SOFTWARE_SYSTEM_NAMES });
+    async (until:Date): Promise<string[]> => {
+        const result = await client.query({ query: GET_SOFTWARE_SYSTEM_NAMES, variables: {until:until} });
         return result.data.softwareSystems.map(softwareSystem => softwareSystem.name);
     }

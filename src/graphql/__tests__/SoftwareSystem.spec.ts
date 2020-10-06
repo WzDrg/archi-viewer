@@ -1,4 +1,4 @@
-import { SoftwareSystem, softwareSystemsToNetwork } from "./SoftwareSystem"
+import { SoftwareSystem, softwareSystemsToNetwork } from "../SoftwareSystem"
 
 describe("softwareSystemToNetwork", () => {
     it("should convert a single software system", () => {

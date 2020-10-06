@@ -1,4 +1,4 @@
-import { Environment, environmentsToNetwork } from "./Environment";
+import { Environment, environmentsToNetwork } from "../Environment";
 
 describe("environmentToNetwork", () => {
     it("should not create node for environment", () => {

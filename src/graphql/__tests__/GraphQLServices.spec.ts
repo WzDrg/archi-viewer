@@ -1,4 +1,4 @@
-import { graphqlNetworkServices } from "./GraphQLServices"
+import { graphqlNetworkServices } from "../GraphQLServices"
 
 describe("GraphQLServices", () => {
     it.skip("should get the software systems", async () => {

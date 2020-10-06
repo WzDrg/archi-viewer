@@ -37,9 +37,9 @@ const collapseContainers = (options: NetworkDisplayOptions) =>
 const getNetwork = (networkServices: NetworkServices) =>
     async (options: NetworkDisplayOptions) =>
         options.level === "D"
-            ? await networkServices.getEnvironments()
+            ? await networkServices.getEnvironments(options.date??new Date())
             : collapseContainers(options)(
-                await networkServices.getSoftwareSystems());
+                await networkServices.getSoftwareSystems(options.date??new Date()));
 
 // Retrieve a list of all names of software systems
 const getSoftwareSystemNames = (networkServices: NetworkServices) =>
@@ -51,7 +51,7 @@ const getEnvironments = (networkServices: NetworkServices) =>
 // Default definition of the core services available
 export interface CoreServices {
     getNetwork: (options: NetworkDisplayOptions) => Promise<Network>;
-    getSoftwareSystemNames: () => Promise<string[]>;
+    getSoftwareSystemNames: (until:Date) => Promise<string[]>;
 }
 
 export const coreServices = (networkServices: NetworkServices) => ({

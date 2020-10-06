@@ -56,7 +56,7 @@ export default function NetworkPage() {
         try {
 	    console.log("Get software system names");
             setLoadingSoftwareSystemNames(true);
-            const names = await coreServices.getSoftwareSystemNames();
+            const names = await coreServices.getSoftwareSystemNames(options.date??new Date());
             setSoftwareSystemNames(["", ...names]);
         } finally {
             setLoadingSoftwareSystemNames(false);
