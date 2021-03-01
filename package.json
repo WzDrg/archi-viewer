@@ -54,5 +54,10 @@
     "io-ts": "^2.2.15",
     "mock-apollo-client": "^1.0.0",
     "ts-jest": "^26.5.2"
+  },
+  "jest": {
+    "testMatch": [
+      "**/?(*.)+(spec|test).[jt]s?(x)"
+    ]
   }
 }
