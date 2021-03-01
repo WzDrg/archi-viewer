@@ -1,55 +1,7 @@
-import ApolloClient, { gql } from "apollo-boost";
-
-import NetworkServices from "../core/NetworkServices";
-import { Node, Link, Network, containerId, softwareSystemId, LinkType } from "../core/Network";
-import { ReferenceLink, referenceLinkToLink } from "./Reference";
-
-export interface Reference {
-    type: string;
-    name: string;
-}
-
-export interface Container {
-    name: string;
-    uses?: Reference[];
-}
-export interface SoftwareSystem {
-    name: string;
-    containers?: Container[];
-    uses?: Reference[];
-};
-
-
-const GET_SOFTWARE_SYSTEMS = gql`
-    { 
-        scalar Date
-
-        softwareSystems(until:Date) {
-            name
-            containers {
-                name
-                uses {
-                    type
-                    name
-                }
-            }
-            uses {
-                type
-                name
-            }
-        }
-    }
-`;
-
-const GET_SOFTWARE_SYSTEM_NAMES = gql`
-    {
-        scalar Date
-
-        softwareSystems(until:Date) {
-            name
-        }
-    }
-`;
+import { Node, Network, containerId, softwareSystemId, LinkType } from "../../core/model/network";
+import { Container, Reference, SoftwareSystem } from "../model/model";
+import { ReferenceLink } from "../model/reference";
+import { referenceLinkToLink } from "./referenceMapper";
 
 const containerToNodes = (container: Container): Node[] =>
     [{
@@ -121,15 +73,3 @@ export const softwareSystemsToNetwork = (softwareSystems: SoftwareSystem[]): Net
             .filter(link => link.source && link.target)
     }
 };
-
-export const getSoftwareSystemsGraphql = (client: ApolloClient<any>) =>
-    async (until:Date): Promise<Network> => {
-        const result = await client.query({ query: GET_SOFTWARE_SYSTEMS, variables:{until:until} });
-        return softwareSystemsToNetwork(result.data.softwareSystems);
-    }
-
-export const getSoftwareSystemNamesGraphql = (client: ApolloClient<any>) =>
-    async (until:Date): Promise<string[]> => {
-        const result = await client.query({ query: GET_SOFTWARE_SYSTEM_NAMES, variables: {until:until} });
-        return result.data.softwareSystems.map(softwareSystem => softwareSystem.name);
-    }

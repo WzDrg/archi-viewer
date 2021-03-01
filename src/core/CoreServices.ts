@@ -1,5 +1,8 @@
-import NetworkServices from "./NetworkServices";
-import { Network, Node, isSoftwareSystem, isContainer, removeNodeFromNetwork, collapseNodeOntoParent, ofSoftwareSystem, softwareSystemId } from "./Network";
+import NetworkServices from "./proxy/networkServices";
+import { Network, Node, isSoftwareSystem, isContainer, removeNodeFromNetwork, collapseNodeOntoParent, ofSoftwareSystem, softwareSystemId } from "./model/network";
+import { TaskEither, map } from "fp-ts/lib/TaskEither";
+import { ArchiViewerError } from "./error";
+import { pipe } from "fp-ts/lib/pipeable";
 
 export interface NetworkDisplayOptions {
     softwareSystem?: string;
@@ -35,11 +38,13 @@ const collapseContainers = (options: NetworkDisplayOptions) =>
             network);
 
 const getNetwork = (networkServices: NetworkServices) =>
-    async (options: NetworkDisplayOptions) =>
+    (options: NetworkDisplayOptions): TaskEither<ArchiViewerError, Network> =>
         options.level === "D"
-            ? await networkServices.getEnvironments(options.date??new Date())
-            : collapseContainers(options)(
-                await networkServices.getSoftwareSystems(options.date??new Date()));
+            ? networkServices.getEnvironments(options.date ?? new Date())
+            : pipe(
+                networkServices.getSoftwareSystems(options.date ?? new Date()),
+                map(collapseContainers(options))
+            );
 
 // Retrieve a list of all names of software systems
 const getSoftwareSystemNames = (networkServices: NetworkServices) =>
@@ -50,8 +55,8 @@ const getEnvironments = (networkServices: NetworkServices) =>
 
 // Default definition of the core services available
 export interface CoreServices {
-    getNetwork: (options: NetworkDisplayOptions) => Promise<Network>;
-    getSoftwareSystemNames: (until:Date) => Promise<string[]>;
+    getNetwork: (options: NetworkDisplayOptions) => TaskEither<ArchiViewerError, Network>;
+    getSoftwareSystemNames: (until: Date) => TaskEither<ArchiViewerError, string[]>;
 }
 
 export const coreServices = (networkServices: NetworkServices) => ({

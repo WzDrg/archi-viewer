@@ -1,41 +1,8 @@
 import ApolloClient, { gql } from "apollo-boost";
-import { Network, Node, environmentId, serverId, Link, LinkType, containerId, containerInstanceId } from "../core/Network";
-import { ReferenceLink, referenceLinkToLink } from "./Reference";
-import { Container } from "./SoftwareSystem";
-
-export interface ContainerInstance {
-    name: string
-    container?: Container
-}
-
-export interface Server {
-    name: string,
-    containers: ContainerInstance[]
-}
-
-export interface Environment {
-    name: string,
-    servers: Server[]
-}
-
-const GET_ENVIRONMENTS = gql`
-    { 
-        scalar Date
-
-        environments(until:Date) {
-            name
-            servers {
-                name
-                containers {
-                    name
-                    container {
-                        name
-                    }
-                }
-            }
-        }
-    }
-`;
+import { Network, Node, serverId, Link, LinkType, containerId, containerInstanceId } from "../../core/model/network";
+import { Container, ContainerInstance, Environment, Server } from "../model/model";
+import { ReferenceLink } from "../model/reference";
+import { referenceLinkToLink } from "./referenceMapper";
 
 const containerToNodes = (container?: Container): Node[] =>
     container
@@ -104,8 +71,3 @@ export const environmentsToNetwork = (environments: Environment[]): Network => {
     }
 };
 
-export const getEnvironments = (client: ApolloClient<any>) =>
-    async (until:Date): Promise<Network> => {
-        const result = await client.query({ query: GET_ENVIRONMENTS, variables: {until:until} });
-        return environmentsToNetwork(result.data.environments);
-    }

@@ -1,7 +1,7 @@
 import React, { useRef } from "react";
 import * as d3 from "d3";
 import { SimulationNodeDatum, SimulationLinkDatum } from "d3";
-import { Network, LinkType } from "../../../core/Network";
+import { Network, LinkType } from "../../../core/model/network";
 
 export interface SimulationNode extends SimulationNodeDatum {
     id: string;

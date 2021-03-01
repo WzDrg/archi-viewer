@@ -4,6 +4,8 @@ import CssBaseline from '@material-ui/core/CssBaseline';
 import NetworkDiagram from './NetworkDiagram';
 import { Paper, FormControl, Select, MenuItem, FormGroup, Switch, FormControlLabel, FormLabel, TextField } from '@material-ui/core';
 import { CoreServicesContext } from '../../Context';
+import { pipe } from 'fp-ts/pipeable';
+import { map } from 'fp-ts/TaskEither';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -53,11 +55,11 @@ export default function NetworkPage() {
     const [loadingSoftwareSystemNames, setLoadingSoftwareSystemNames] = useState(true);
     const [softwareSystemNames, setSoftwareSystemNames] = useState([""]);
     async function getSoftwareSystemNames() {
+        setLoadingSoftwareSystemNames(true);
         try {
-	    console.log("Get software system names");
-            setLoadingSoftwareSystemNames(true);
-            const names = await coreServices.getSoftwareSystemNames(options.date??new Date());
-            setSoftwareSystemNames(["", ...names]);
+            await pipe(
+                coreServices.getSoftwareSystemNames(options.date ?? new Date()),
+                map(names => setSoftwareSystemNames(["", ...names])))();
         } finally {
             setLoadingSoftwareSystemNames(false);
         }
@@ -68,11 +70,13 @@ export default function NetworkPage() {
     const [loadingNetwork, setLoadingNetwork] = useState(false);
     const [network, setNetwork] = useState({ nodes: [], links: [] });
     async function getNetwork() {
+        console.log(`level: ${options.level}`);
+        setLoadingNetwork(true);
         try {
-            console.log(`level: ${options.level}`);
-            setLoadingNetwork(true);
-            const network = await coreServices.getNetwork(options);
-            setNetwork(network);
+            await pipe(
+                coreServices.getNetwork(options),
+                map(setNetwork)
+            )();
         } finally {
             setLoadingNetwork(false);
         }
@@ -139,7 +143,7 @@ export default function NetworkPage() {
             </Paper>
             <Paper elevation={3}>
                 <NetworkDiagram network={network} />
-	</Paper>
+            </Paper>
         </div>
     );
 }
